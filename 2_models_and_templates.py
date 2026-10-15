@@ -30,7 +30,7 @@ def main():
         input_variables=["information"], template=summary_template   ###TEMPLATE CAN HANDLE ERROS; INFORCE FORMAT ETC.
     )
 
-    llm = ChatOllama(temperature=0, model="gemma3:270m")
+    llm = ChatOllama(temperature=0, model="qwen2.5:3b")
     #llm = ChatOpenAI(temperature=0, model="gpt-5")
     
     chain = summary_prompt_template | llm
