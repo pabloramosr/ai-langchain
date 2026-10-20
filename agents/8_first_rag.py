@@ -52,7 +52,7 @@ vector_store = InMemoryVectorStore(embeddings)
 vector_store.add_documents(documents=documents)
 
 # 3. Retriever
-retriever = vector_store.as_retriever(search_kwargs={"k": 3})
+retriever = vector_store.as_retriever(search_kwargs={"k":1})
 
 # 4A. Generic RAG prompt from LangChain Hub
 #prompt = hub.pull("rlm/rag-prompt")
@@ -72,7 +72,7 @@ Answer:
 """)
 
 # 5. LLM
-llm = ChatOllama(model="llama3.1:latest", temperature=0)
+llm = ChatOllama(model="qwen2.5:3b", temperature=0)
 
 # 6. Question
 question = (
