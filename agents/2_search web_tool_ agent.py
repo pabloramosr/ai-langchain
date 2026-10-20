@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 import matplotlib
 matplotlib.use("Agg")
 from matplotlib.figure import Figure
-import yfinance as yf
+import yfinance as yf # Library for stock prices.
 from langchain_core.tools import tool
 
 @tool
@@ -57,7 +57,6 @@ def price_plot(
     filename = "price_plot.png"
     fig.savefig(filename, dpi=150)
     
-    # Abre la imagen en la app de fotos de Windows sin congelar ni usar hilos de Tkinter:
     os.system(f"start {filename}")
 
     return f"Price plot created successfully and opened as '{filename}' for: {', '.join(tickers_list)}."
@@ -97,29 +96,9 @@ result = agent.invoke({
     "messages": [
         {
             "role": "user",
-            "content": "What is the current price of stock ticker 'GOOG'? Give me the prices in a table and give me a plot of the prices of stock ticker 'GOOG' from 2023 to 2026."
-        } # Usar input() para que sea dinamico en lugar de hardcoded
-    ]
-})
-
-
-# Antes:
-# print(result["messages"][-1].content[0]["text"])
-
-# Ahora:
-print(result["messages"][-1].content)
-
-'''result = agent.invoke({
-    "messages": [
-        {
-            "role": "user",
-            "content": "Do you remember the last answer you gave me?"
+            "content": "Give me a table of prices and a plot of the prices of stock ticker 'GOOG' from 2023 to 2026."
         }
     ]
 })
 
-
-# Antes:
-# print(result["messages"][-1].content[0]["text"])
-# Ahora:
-print(result["messages"][-1].content)'''
+print(result["messages"][-1].content)
