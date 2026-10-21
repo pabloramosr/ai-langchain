@@ -15,7 +15,7 @@ from langchain_core.tools import tool
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_ollama import OllamaEmbeddings
 from langchain_pinecone import PineconeVectorStore
-
+from langchain_ollama import ChatOllama
 
 load_dotenv()
 
@@ -63,10 +63,12 @@ def search_governance_knowledge(query: str) -> str:
     return "\n\n---\n\n".join(evidence)
 
 
-llm = ChatGoogleGenerativeAI(
+'''llm = ChatGoogleGenerativeAI(
     model="gemini-3.8-flash",
     temperature=0,
-)
+)'''
+
+llm = ChatOllama(model="qwen2.5:3b", temperature=0)
 
 agent = create_agent(
     model=llm,
