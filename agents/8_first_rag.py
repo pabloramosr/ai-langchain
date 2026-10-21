@@ -48,7 +48,7 @@ documents = [
 embeddings = OllamaEmbeddings(model="bge-large")
 
 # 2. Local in-memory vector store
-vector_store = InMemoryVectorStore(embeddings)
+vector_store = InMemoryVectorStore(embeddings) # langchain
 vector_store.add_documents(documents=documents)
 
 # 3. Retriever
