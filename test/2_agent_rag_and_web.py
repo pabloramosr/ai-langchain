@@ -130,7 +130,7 @@ agent = create_agent(
 def run_agent_with_trace(user_question: str):
     """Ejecuta el agente mostrando paso a paso el plan y las herramientas elegidas."""
     print("\n" + "=" * 80)
-    print(f"❓ PREGUNTA DEL USUARIO: {user_question}")
+    print(f"PREGUNTA DEL USUARIO: {user_question}")
     print("=" * 80)
 
     result = agent.invoke(
@@ -145,7 +145,7 @@ def run_agent_with_trace(user_question: str):
     )
 
     # Inspeccionamos los mensajes para mostrar los llamados realizados (El Plan)
-    print("\n🔍 --- SEGUIMIENTO DE LLAMADOS Y DECISIONES (PLAN DEL AGENTE) ---")
+    print("\n--- SEGUIMIENTO DE LLAMADOS Y DECISIONES (PLAN DEL AGENTE) ---")
     tool_called = False
     for msg in result["messages"]:
         # Si el modelo decidió llamar a una herramienta:
@@ -154,17 +154,17 @@ def run_agent_with_trace(user_question: str):
                 tool_called = True
                 name = call.get("name")
                 args = call.get("args")
-                print(f"👉 [DECISIÓN]: El agente eligió la herramienta -> '{name}'")
-                print(f"   [PARÁMETROS]: {args}")
+                print(f"[DECISIÓN]: El agente eligió la herramienta -> '{name}'")
+                print(f"[PARÁMETROS]: {args}")
         elif msg.type == "tool":
             snippet = msg.content[:160].replace("\n", " ") if msg.content else ""
-            print(f"📥 [EVIDENCIA RECIBIDA]: {snippet}...")
+            print(f"[EVIDENCIA RECIBIDA]: {snippet}...")
 
     if not tool_called:
-        print("ℹ️  El agente respondió directamente sin requerir herramientas.")
+        print("El agente respondió directamente sin requerir herramientas.")
 
     # Imprimir la respuesta final
-    print("\n🎯 --- RESPUESTA FINAL DEL AGENTE ---")
+    print("\n--- RESPUESTA FINAL DEL AGENTE ---")
     final_message = result["messages"][-1]
     if isinstance(final_message.content, str):
         print(final_message.content)
