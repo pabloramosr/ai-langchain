@@ -181,10 +181,11 @@ def run_agent_with_trace(user_question: str):
 if __name__ == "__main__":
     test_queries = [
         # Caso 1: Debe ir al RAG (Reglamento estudiantil)
-        "¿Qué dice el reglamento de alumnos sobre las faltas a la integridad académica y deshonestidad?",
+        # "¿Qué dice el reglamento de alumnos sobre las faltas a la integridad académica y deshonestidad?",
         
         # Caso 2: Debe ir a la Web (Carreras / Oferta no está en el reglamento)
-        "¿Cuáles son las carreras de ingeniería en tecnologías computacionales que ofrece el Tec de Monterrey?",
+        # "¿Cuáles son las carreras de ingeniería en tecnologías computacionales que ofrece el Tec de Monterrey?",
+        "Por que el cielo es azu;?"
     ]
 
     for q in test_queries:

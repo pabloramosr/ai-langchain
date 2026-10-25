@@ -1,0 +1,158 @@
+Uriel Garcia Macedo - Don Banamex
+
+Documentacion que compartieron? Cero familiarizados
+
+Arquitectura del agente -> funcionalidad
+
+Establecer un agente que se especialice en analisis de datos.
+
+Componentes principales:
+
+- LLM: Se utiliza un llm que no corre en la nube, de manera local llamado ollama 3.1.
+Entender el lenguaje, spl, estructura de datos para consulta. Memoria de corto plazo.
+Mantener la conversasion y manetener los datos sin tener que estar repitiendo. Redes.
+Permitir al agente guardar la info de la conversacion y asegurar que las respuestas son
+consistentes.
+
+- Memoria Semantica: Base de conocimientos para guardar informacion de operaciones pasadas, 
+de esta forma el agente puede recordar operaciones anteriores y ofrecer recomendaciones 
+personalizadas. Tener cuidado con los tokens, que se traduce a dinelo. Cuidar el costo beneficio.
+Considerar ser lo mas eficiente posible. Indexar en una estructura vectorial, en lugar de que se
+ponga a barrer toda la info, primero trabaja con el indice que de la info relevante y buscar sobre
+una estructura mas baja de datos que contenga toda la info.
+
+- RAG: Info de memoria de largo plazo, info de corto.
+
+- Interfaz: Pagina que permita que el usuario escriba o hable con el agente para expresar que busca.
+
+- Orquestador: Lo que une todos los componentes.
+
+La pregunta que se haga, la respusta debe de ser la misma independientemente de cuantas veces se haga.
+Proponer cual es la mejor tecnolodgia que se puede usar para tener los mejores beneficioes. La mejor solucion
+tecnica no es la mejor para la empresa, buscar el equilibrio.
+
+Especialidades: Datastewardship, gobernanza de datos, conceptos de negocio, que pueda responder preguntas simples
+como "Valor de cartera de tal a tal sin considerar tal con tal y tal". Entender el negocio, que pueda hacer
+analisis de datos. Las cuentas de cuentan y los estados se suman lol, que pueda hacer el lenguaje nat a sql.
+Capa semantica - > Traductor de componentes de negocio a componentes de datos. Los sql son lowkey de impacto,
+democratizar los datos para las personas que no sin especuaistas en datos. 
+
+Docker puede usarse aqui?
+LangChain?
+
+OLTP -> DSS -> Normalizacion -> 
+Bases de datos relacionales
+
+Kimball e Inmon 
+
+Necesitan saber cuales son los productos que mas se venden para actualizar la informacion? Generar y tomar decisiones
+en base a esa informacion, probablemente llamadas fotografias, SKU, ventas por tienda, verduras, son conceptos que agrupan los sku 
+para saber como se pueden clasificar y que hacer sobre ellos, y mencionan svm. 
+
+Servicio a una empresa funanciera: Para que la informacion se pueda procesar necesita de:
+
+Cliente - Eje de todo, alrededor de el estan los productos y las transacciones, y existen llaves primarias y foraneas. Lo hace unico.
+Para saber que tiene el cliente, la identidad del cliente el numero de cliente y productos y al parecer eso se llama llave foranea, 
+importantes para esquema de toma de decisiones. Las inconsistencias no son permitidas. Entidades que se relacionan, tambien se tiene 
+que definir como se relacionan.
+
+Tabla de transacciones. Concepto importante.
+
+Cliente -> Cuenta -> Transaccion
+
+Para poder tener un standar de que tipo de reglas tomar, tenemos 5 formas de normalizar la info en plat de toma de desiciones. **Documento**
+
+Reglas del dataset para ellos.
+
+1era forma: llave que haga unico al registro
+2da forma: La llave tiene que tener relacion a otras entidades como llave foranea.
+
+Modelo estrella : metodologia de kimball.
+
+1. Elegir proceso de negocio
+2. Declarar el grano de negocio
+3. Identificar las dimensiones
+4. Identificar las hechos
+5. Valdiar tablas de dimensiones y hechos
+
+Dos conceptos, o son metricas o son dimensiones.
+
+Podemos usar postgres.
+
+Tabla de catalogo de clientes: 
+
+Capa semantica, para que vea como es la relacion que existe entre los campos para el negocio al que esta dirigido. Asi podra buscar su sql, resolverlo
+y presentar el dato al usuario. Canalizar preguntas.
+
+Que hace un data steward?
+Un agente que se hace valer por la calidad, disponibilidad y seguridad de los datos. Entre sus
+especialidades deben de estar las siguiente:
+
+Definir estrategias:
+Tipo de informacion que necesita el negocio y como administrar los datos en funcion de ello.
+Definir los datos:
+Identificar las distintas bases de datos, como acceder a ellas, y evitar incompatibilidad.
+Asegurar la calidad de los datos aportados:
+Extraer informacion de valor, de caliad, que este lo mas depurada posible para los departamentos.
+Garantizar la seguridad y proteccion:
+Hacerse responsable de la seguridad de los datos y hacer a los demas responsables o decir por que es importante.
+Asegurar politicas y normativas:
+Identificar temas sensibles, garantuzar que se cumple con las normativas y politicas de seguridad
+a nivel interno como externo, pueden variar en funcion de la situacion geografica.
+
+Importancia
+
+Mejores resultados de negocio al contar con informacion segura y precisa. 
+Eficiencia en procesos de trabajo, especialmente en aquellos que usan muchos datos.
+Mayor acceso a informacion de valor a los diferentes departamentos de la organizacion.
+Aplicacion de la cultura DATA DRIVEN.
+
+https://www.unir.net/revista/ingenieria/data-steward/
+
+
+RAG - Retrieval-Augmented Generation
+
+Tecnica para aterrizar el modelo de lenguaje, todos los modelos fueron entrenados con un dataset que puede estar
+desactualizada, la arquitectura RAg consiste de un contexto con reglas, politicas de gobierno, etc. Lo que queremos
+hacer es darle el contexto o la capa semantica de BANAMEX. 
+
+Tiene dos fases:
+- Ingestion: prepare knowledge, muchos dicumentos con reglas, actualizar a cosas mas relativas al problema.
+La ingesta debe de ser eficiente dividendo en: Documentos(multimodal) -> split -> Embed -> Store, chunks.
+
+Asegurarse de que el modelo pueda leer y entender el contexto.
+Como se va a ver esto para el data steward.
+- Query: Question -> embed -> retrieve -> augmented prompt -> LLM -> Response
+
+Es una mala idea tener un agente con muchas herramientas, ya que el poder no lo usa para razonar.
+
+Vector Data Base local usando langchain. 
+
+Extraer cada uno de los objetos(chunks) y hacer un embeding, un vector que me da toda la semantica del contexto:
+Hiperparametros: Tamaño del chunk, cuidar la info que viene por tamaño en los chunks. Fuente de embedding.
+
+Query -> vector -> comparar vector de pregunta con el vector de la base de datos -> obtener similitud -> fetch chunks
+
+PINECODE: Base de datos para los agentes
+Langchain nos da una variedad de leer documentos, tiene que usar chink_size que habla de tokens.
+
+Prsentacion: RAG y un agente orquestador. Mencionar el por que se usa cada tecnologia.
+
+Jueves: que llame a una herramienta y que tenga rag, herramientas vacias, escoger en diferentes herramientas. Que su plan muestre los llamados que se realizo. Que use pinecone, multiples herramientas, vector data base o tavily.
+limitantes, que resolvimos, que podemos hacer, que logramos, un demo de unos prompts para ver que usar. 
+Miercoles: Codigo 10 agentic rag pinecone.
+
+Que habilidades tienen todos los servidores, como se pueden sacar las herramientas de esos servidores: MCP
+
+Herramienta: OpenCode, que hace?
+
+ADK?
+
+MCP big Query
+
+Ollama Agentes de SQL
+
+Google Agent Platform - Modo visual de programar un agente.
+
+Guardar Memoria: LangGraph y usamos checkpoint.memory, InMemorySaver, en vez de guardarlo en variables. Se puede hacer de manera local o mandarlo a pincecone.
+Se puede acordar de la ultima sesion de consultas. 
