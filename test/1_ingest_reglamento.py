@@ -20,7 +20,6 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_ollama import OllamaEmbeddings
 from langchain_pinecone import PineconeVectorStore
 
-# Cargar variables de entorno desde la raíz de LangCHain
 load_dotenv(Path(__file__).parent.parent / ".env")
 
 INDEX_NAME = os.environ.get("INDEX_NAME", "student-governance")
@@ -59,11 +58,9 @@ def main():
     if not PDF_PATH.exists():
         raise FileNotFoundError(f"No se encontró el archivo: {PDF_PATH}")
 
-    # 1. Cargar páginas
     raw_docs = load_pdf_pages(PDF_PATH)
     print(f"Se cargaron {len(raw_docs)} páginas con texto útil.")
 
-    # 2. Dividir en fragmentos (Chunks)
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=1200,
         chunk_overlap=150,
@@ -71,18 +68,15 @@ def main():
     chunks = splitter.split_documents(raw_docs)
     print(f"Se generaron {len(chunks)} chunks.")
 
-    # 3. Inicializar embeddings locales con bge-large
     print("Inicializando modelo de embeddings (bge-large)...")
     embeddings = OllamaEmbeddings(model="bge-large")
 
-    # 4. Conectar a Pinecone
     print(f"Conectando al índice de Pinecone: '{INDEX_NAME}'...")
     vector_store = PineconeVectorStore(
         index_name=INDEX_NAME,
         embedding=embeddings,
     )
 
-    # 5. Subir a Pinecone en lotes para monitorear el progreso
     ids = [generate_stable_id(c) for c in chunks]
     batch_size = 50
     total_chunks = len(chunks)

@@ -23,15 +23,11 @@ from langchain_ollama import ChatOllama, OllamaEmbeddings
 from langchain_pinecone import PineconeVectorStore
 from langchain_tavily import TavilySearch
 
-# Cargar variables de entorno desde la raíz de LangCHain
 load_dotenv(Path(__file__).parent.parent / ".env")
 
 INDEX_NAME = os.environ.get("INDEX_NAME", "student-governance")
 TAVILY_API_KEY = os.environ.get("TAVILY_API_KEY")
 
-# ==========================================
-# 1. Configuración del Vector Store (RAG)
-# ==========================================
 embeddings = OllamaEmbeddings(model="bge-large")
 vector_store = PineconeVectorStore(
     index_name=INDEX_NAME,
@@ -39,10 +35,6 @@ vector_store = PineconeVectorStore(
 )
 retriever = vector_store.as_retriever(search_kwargs={"k": 4})
 
-
-# ==========================================
-# 2. Definición de Herramientas (Tools)
-# ==========================================
 
 @tool
 def search_student_regulations(query: str) -> str:
@@ -89,10 +81,6 @@ def empty_weather_tool(location: str) -> str:
     return f"Información meteorológica no disponible para {location}."
 
 
-# ==========================================
-# 3. Creación del Agente y System Prompt
-# ==========================================
-
 llm = ChatOllama(model="qwen2.5:3b", temperature=0)
 
 system_prompt = """
@@ -123,10 +111,6 @@ agent = create_agent(
 )
 
 
-# ==========================================
-# 4. Función de Trazabilidad y Visualización del Plan
-# ==========================================
-
 def run_agent_with_trace(user_question: str):
     """Ejecuta el agente mostrando paso a paso el plan y las herramientas elegidas."""
     print("\n" + "=" * 80)
@@ -144,11 +128,9 @@ def run_agent_with_trace(user_question: str):
         }
     )
 
-    # Inspeccionamos los mensajes para mostrar los llamados realizados (El Plan)
     print("\n--- SEGUIMIENTO DE LLAMADOS Y DECISIONES (PLAN DEL AGENTE) ---")
     tool_called = False
     for msg in result["messages"]:
-        # Si el modelo decidió llamar a una herramienta:
         if hasattr(msg, "tool_calls") and msg.tool_calls:
             for call in msg.tool_calls:
                 tool_called = True
@@ -174,18 +156,10 @@ def run_agent_with_trace(user_question: str):
                 print(block.get("text", ""))
 
 
-# ==========================================
-# 5. Demostración y Pruebas Contrastantes
-# ==========================================
-
 if __name__ == "__main__":
     test_queries = [
-        # Caso 1: Debe ir al RAG (Reglamento estudiantil)
-        # "¿Qué dice el reglamento de alumnos sobre las faltas a la integridad académica y deshonestidad?",
-        
-        # Caso 2: Debe ir a la Web (Carreras / Oferta no está en el reglamento)
-        # "¿Cuáles son las carreras de ingeniería en tecnologías computacionales que ofrece el Tec de Monterrey?",
-        "Por que el cielo es azu;?"
+        "¿Qué dice el reglamento de alumnos sobre las faltas a la integridad académica y deshonestidad?",
+        "¿Cuáles son las carreras de ingeniería en tecnologías computacionales que ofrece el Tec de Monterrey?"
     ]
 
     for q in test_queries:
